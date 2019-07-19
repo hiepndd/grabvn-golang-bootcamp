@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"github.com/pkg/errors"
 	"strconv"
 	"unicode"
 )
@@ -23,10 +22,13 @@ func (repl *repl) calculate(expression string) (int, error) {
 		if unicode.IsNumber(r) || r == '+' || r == '-' || r == '/' || r == '*' {
 			buf.WriteRune(r)
 		}
+		if unicode.IsLetter(r) {
+			return 0, ErrExpressionContainAlphabet
+		}
 	}
 
 	if buf.Len() == 0 {
-		return 0, errors.New("err")
+		return 0, ErrExpressionBlank
 	}
 
 	expression = buf.String()
@@ -40,7 +42,7 @@ func (repl *repl) calculate(expression string) (int, error) {
 
 	res := 0
 	for i < l {
-		operation := expression[i]
+		operators := expression[i]
 		i++
 
 		start := i
@@ -49,7 +51,7 @@ func (repl *repl) calculate(expression string) (int, error) {
 		}
 		a, _ := strconv.Atoi(expression[start:i])
 
-		switch operation {
+		switch operators {
 		case '+':
 			res += cur
 			cur = a
