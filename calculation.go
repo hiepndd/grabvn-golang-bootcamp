@@ -16,7 +16,6 @@ type repl struct {
 
 func (repl *repl) calculate(expression string) (int, error) {
 	var buf bytes.Buffer
-
 	// Remove all white spaces
 	for _, r := range expression {
 		if unicode.IsNumber(r) || r == '+' || r == '-' || r == '/' || r == '*' {
@@ -44,7 +43,6 @@ func (repl *repl) calculate(expression string) (int, error) {
 	for i < l {
 		operators := expression[i]
 		i++
-
 		start := i
 		for i < l && unicode.IsNumber(rune(expression[i])) {
 			i++
